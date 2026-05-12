@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>KFHA Humanitarian Youth Network</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Montserrat',sans-serif;
+    background:#f4f7fb;
+    color:#333;
+    overflow-x:hidden;
+}
+
+/* =========================
+TOP NAVBAR
+========================= */
+
+.topbar{
+    background:#08304b;
+    color:#fff;
+    height:45px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:2000;
+}
+
+.topbar-left{
+    font-size:14px;
+}
+
+.social-icons a{
+    color:white;
+    margin-left:15px;
+    font-size:18px;
+    transition:0.3s;
+}
+
+.social-icons a:hover{
+    color:#ffd166;
+}
+
+/* =========================
+MAIN NAVBAR
+========================= */
+
+.navbar{
+    position:fixed;
+    top:45px;
+    width:100%;
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    z-index:1500;
+}
+
+.nav-container{
+    width:90%;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 0;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.logo-area img{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+}
+
+.logo-text h2{
+    color:#0a3d62;
+    font-size:22px;
+}
+
+.logo-text p{
+    font-size:13px;
+    color:#666;
+}
+
+.nav-links{
+    display:flex;
+    list-style:none;
+    gap:25px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#0a3d62;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:#e55039;
+}
+
+.menu-toggle{
+    display:none;
+    font-size:28px;
+    cursor:pointer;
+    color:#0a3d62;
+}
+
+/* =========================
+HEADER
+========================= */
+
+header{
+    min-height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),
+    url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop') center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+    padding:120px 20px 50px;
+}
+
+.hero-content{
+    max-width:800px;
+}
+
+.hero-content h1{
+    font-size:58px;
+    margin-bottom:20px;
+}
+
+.hero-content p{
+    font-size:20px;
+    margin-bottom:30px;
+    line-height:1.6;
+}
+
+.btn{
+    display:inline-block;
+    padding:14px 28px;
+    background:#e55039;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    transition:0.3s;
+    font-weight:600;
+}
+
+.btn:hover{
+    background:#c0392b;
+}
+
+/* =========================
+SECTIONS
+========================= */
+
+section{
+    padding:90px 7%;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:50px;
+    color:#0a3d62;
+    font-size:38px;
+}
+
+/* =========================
+CARDS
+========================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h3{
+    margin-bottom:15px;
+    color:#0a3d62;
+}
+
+/* =========================
+STATS
+========================= */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:25px;
+    margin-top:40px;
+}
+
+.stat{
+    background:#0a3d62;
+    color:white;
+    text-align:center;
+    padding:35px 20px;
+    border-radius:16px;
+}
+
+.stat h2{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+/* =========================
+SLIDER
+========================= */
+
+.slider{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+}
+
+.slides{
+    display:flex;
+    transition:0.5s;
+}
+
+.slides img{
+    width:100%;
+    flex-shrink:0;
+    height:420px;
+    object-fit:cover;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.6);
+    border:none;
+    color:white;
+    padding:12px 18px;
+    cursor:pointer;
+    border-radius:50%;
+}
+
+.prev{
+    left:15px;
+}
+
+.next{
+    right:15px;
+}
+
+/* =========================
+INFO SECTION
+========================= */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.info-box{
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.map-container{
+    height:320px;
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.info-box h3{
+    margin-bottom:20px;
+    color:#0a3d62;
+}
+
+/* =========================
+PARTNERS
+========================= */
+
+.partner-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+/* =========================
+FOOTER
+========================= */
+
+footer{
+    background:#0a3d62;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .nav-links{
+        position:absolute;
+        top:90px;
+        left:0;
+        width:100%;
+        background:white;
+        flex-direction:column;
+        padding:20px 0;
+        display:none;
+        text-align:center;
+    }
+
+    .nav-links.active{
+        display:flex;
+    }
+
+    .hero-content h1{
+        font-size:42px;
+    }
+
+    .hero-content p{
+        font-size:18px;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .topbar{
+        padding:0 20px;
+    }
+
+    .hero-content h1{
+        font-size:34px;
+    }
+
+    .section-title{
+        font-size:30px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+TOPBAR
+========================= -->
+
+<div class="topbar">
+
+    <div class="topbar-left">
+        KFHA Humanitarian Youth Network
+    </div>
+
+    <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+    </div>
+
+</div>
+
+<!-- =========================
+MAIN NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <div class="logo-area">
+
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHNXZOzkTAvYvbK7FAM89DVuU7kqh17Sg7wg&s" alt="KFHA Logo">
+            <img src="https://info.kfha.org.ki/wp-content/uploads/2023/08/kfha_icon.png" alt="KFHA Logo">
+
+            
+
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#dashboard">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#updates">Updates</a></li>
+            <li><a href="#stories">Stories</a></li>
+            <li><a href="#reports">Highlights</a></li>
+            <li><a href="#partners">Partners</a></li>
+            <li><a href="#info">Map</a></li>
+        </ul>
+
+    </div>
+
+</nav>
+
+<!-- =========================
+HEADER
+========================= -->
+
+<header>
+
+    <div class="hero-content">
+
+        <h1>KFHA Humanitarian Youth Network</h1>
+
+        <p>
+            Empowering young people across Kiribati to support communities
+            through humanitarian response, awareness, resilience and leadership.
+        </p>
+
+        <a href="#updates" class="btn">Explore Updates</a>
+
+    </div>
+
+</header>
+
+<!-- =========================
+ABOUT
+========================= -->
+
+<section id="dashboard">
+
+    <h2 class="section-title">About Us</h2>
+
+    <p style="text-align:center; max-width:900px; margin:auto; line-height:1.8;">
+        We are a network of youth across Kiribati supporting island communities,
+        government ministries and humanitarian partners during emergencies,
+        awareness campaigns and resilience activities.
+    </p>
+
+    <div class="dashboard">
+
+        <div class="stat">
+            <h2>6</h2>
+            <p>Active Islands</p>
+        </div>
+
+        <div class="stat">
+            <h2>120+</h2>
+            <p>Youth Members</p>
+        </div>
+
+        <div class="stat">
+            <h2>80+</h2>
+            <p>Trainings Completed</p>
+        </div>
+
+        <div class="stat">
+            <h2>25</h2>
+            <p>New Volunteers</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+SERVICES
+========================= -->
+
+<section id="services">
+
+    <h2 class="section-title">Our Services</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Emergency Response</h3>
+            <p>Supporting island communities during droughts, floods and emergencies.</p>
+        </div>
+
+        <div class="card">
+            <h3>Community Awareness</h3>
+            <p>Delivering awareness on health, SRH, climate change and preparedness.</p>
+        </div>
+
+        <div class="card">
+            <h3>Youth Capacity Building</h3>
+            <p>Training youth in leadership, first aid and humanitarian response.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+UPDATES
+========================= -->
+
+<section id="updates">
+
+    <h2 class="section-title">Latest Updates</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Drought Response - Tarawa</h3>
+            <p>Youth volunteers supported water awareness and distribution campaigns.</p>
+        </div>
+
+        <div class="card">
+            <h3>Health Outreach - Abaiang</h3>
+            <p>Community sessions conducted on hygiene and reproductive health.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+STORIES
+========================= -->
+
+<section id="stories">
+
+    <h2 class="section-title">Community Voices</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <p>
+                "The youth network helped our village during the drought response.
+                We are very thankful."
+            </p>
+            <br>
+            <strong>- Community Member</strong>
+        </div>
+
+        <div class="card">
+            <p>
+                "Being part of KFHA Youth Network helped me support my island community."
+            </p>
+            <br>
+            <strong>- Youth Volunteer</strong>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+HIGHLIGHTS
+========================= -->
+
+<section id="reports">
+
+    <h2 class="section-title">Impact of Climate Change in Kiribati</h2>
+
+    <div class="slider">
+
+        <div class="slides" id="slides">
+
+            <!-- Kiribati themed images -->
+
+            <img src="https://www.dropbox.com/scl/fi/288qi9mra94j57h2r2c3g/9910cf1d-30ee-4fb2-bdd2-8b58e6e6ae72.jpeg?rlkey=2pow4pibjb3uo36pfzzvl9n1l&st=cdnnu1te&dl=1">
+            <img src="https://www.dropbox.com/scl/fi/s5tqixpjgn047iets4jo5/8e12aba6-8709-4911-9463-03eb6763a8d9.jpeg?rlkey=040s9kqxv7jbutkr7085h8kai&st=ye2r2em5&dl=1">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiB4HPMSoxSd0Jo040nprUvzZWiMPR-_OtMg&s">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH92j2iJgD8aSICqDrSMvqeroR7QorVYvxnw&s">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIFYBbjUZpFryU8gm59o3AFg0d6Gvg510dtw&s">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-MT44c15st9h09l0PkDq-aHQkhkeNFlK8AQ&s">
+
+            <img src="https://static.givealittle.co.nz/assets/hero/0dfe3d24-856c-47f4-9110-aacd01496606-1000">
+            <img src="https://static01.nyt.com/images/2016/06/26/world/26kiribati-slideshwo-slide-5EF8/26kiribati-slideshwo-slide-5EF8-articleLarge.jpg?quality=75&auto=webp&disable=upscale">
+            <img src="https://media.rnztools.nz/rnz/image/upload/s--r-gtprwN--/c_scale,f_auto,q_auto,w_1050/v1643559562/4NFRZDA_image_crop_75797?_a=BACCd2AD">
+            <img src="https://350.org/wp-content/uploads/2014/07/IMG_8036-1024x627.jpg">
+            <img src="https://media.cnn.com/api/v1/images/stellar/prod/210708125519-0708-pacificislandclimatemigration3.jpg?q=w_1600,h_1067,x_0,y_0,c_fill">
+            <img src="https://interactives.stuff.co.nz/2017/10/kiribati-the-angry-sea-will-kill-us-all/media/maternity-ls-mr.jpg">
+            <img src="https://i.guim.co.uk/img/media/e5c6676b73c5b2d96725a69597a2de59cf3ad199/0_166_5000_3002/master/5000.jpg?width=1200&quality=85&auto=format&fit=max&s=3716e8fbd4399218edfa27d6c8ea364f">
+
+        </div>
+
+        <button class="arrow prev" onclick="moveSlide(-1)">
+            &#10094;
+        </button>
+
+        <button class="arrow next" onclick="moveSlide(1)">
+            &#10095;
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================
+PARTNERS
+========================= -->
+
+<section id="partners">
+
+    <h2 class="section-title">Key Stakeholders / Partners</h2>
+
+    <div class="partner-grid">
+
+        <div class="card">
+            <h3>MHMS</h3>
+            <p>Ministry of Health & Medical Services</p>
+        </div>
+
+        <div class="card">
+            <h3>MWYSSA</h3>
+            <p>Ministry of Women, Youth & Social Affairs</p>
+        </div>
+
+        <div class="card">
+            <h3>KPS</h3>
+            <p>Kiribati Police Service</p>
+        </div>
+
+        <div class="card">
+            <h3>KMS</h3>
+            <p>Kiribati Meteorological Service</p>
+        </div>
+
+        <div class="card">
+            <h3>OB</h3>
+            <p>Office of the Beretitenti</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+INFO SECTION
+========================= -->
+
+<section id="info">
+
+    <h2 class="section-title">Weather, Coverage & Information</h2>
+
+    <div class="info-grid">
+
+        <!-- Weather -->
+
+        <div class="info-box">
+
+            <h3>Live Weather</h3>
+
+            <p style="line-height:1.8;">
+                Access live weather monitoring and satellite imagery for Kiribati.
+            </p>
+
+            <br>
+
+            <a href="https://zoom.earth/places/kiribati/south-tarawa/" target="_blank" class="btn">
+                Open Weather Map
+            </a>
+
+        </div>
+
+        <!-- Map -->
+
+        <div class="info-box">
+
+            <h3>Youth Club Coverage</h3>
+
+            <div id="map" class="map-container"></div>
+
+        </div>
+
+        <!-- Contacts -->
+
+        <div class="info-box">
+
+             <div style="background:#f5f7fa; padding:20px; border-radius:10px;">
+              <h3 style="text-align:center;">Important Contacts</h3>
+              <ul style="list-style:none; padding:0; margin-top:10px; line-height:1.8;">
+                <li><strong>MHMS:</strong> +686 12345 | info@mhms.gov.ki | <a href="http://www.mhms.gov.ki" target="_blank">Website</a></li>
+                <li><strong>KFHA:</strong> +686 54321 | info@kfha.org.ki | <a href="https://kfha.org.ki" target="_blank">Website</a></li>
+                <li><strong>KMS:</strong> +686 11223 | weather@kms.gov.ki | <a href="http://met.gov.ki" target="_blank">Website</a></li>
+                <li><strong>KPS:</strong> +686 33445 | police@kps.gov.ki | <a href="#" target="_blank">Website</a></li>
+                <li><strong>OB Office:</strong> +686 66778 | info@ob.gov.ki | <a href="#" target="_blank">Website</a></li>
+              </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+FOOTER
+========================= -->
+
+<footer>
+
+    <p>
+        © 2026 KFHA Humanitarian Youth Network | Kiribati
+    </p>
+
+</footer>
+
+<!-- LEAFLET -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+/* =========================
+MOBILE MENU
+========================= */
+
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+
+menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("active");
+});
+
+/* =========================
+MAP
+========================= */
+
+var map = L.map('map').setView([1.4518, 172.9717], 5);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+    attribution:'© OpenStreetMap'
+}).addTo(map);
+
+var clubs = [
+
+    {
+        name:"Tarawa",
+        lat:1.4518,
+        lng:172.9717,
+        count:20
+    },
+
+    {
+        name:"Abaiang",
+        lat:1.8,
+        lng:173.04,
+        count:15
+    },
+
+    {
+        name:"Marakei",
+        lat:1.35,
+        lng:172.48,
+        count:12
+    },
+
+    {
+        name:"Tamana",
+        lat:0.97,
+        lng:173.3,
+        count:10
+    },
+
+    {
+        name:"Kiritimati",
+        lat:1.86,
+        lng:157.36,
+        count:25
+    }
+
+];
+
+clubs.forEach(function(club){
+
+    L.marker([club.lat, club.lng])
+    .addTo(map)
+    .bindPopup(
+        "<strong>" + club.name + "</strong><br>Youth Clubs: " + club.count
+    );
+
+});
+
+/* =========================
+SLIDER
+========================= */
+
+let index = 0;
+
+function moveSlide(step){
+
+    const slides = document.getElementById('slides');
+    const total = slides.children.length;
+
+    index = (index + step + total) % total;
+
+    slides.style.transform =
+    `translateX(-${index * 100}%)`;
+
+}
+
+</script>
+
+</body>
+</html>
